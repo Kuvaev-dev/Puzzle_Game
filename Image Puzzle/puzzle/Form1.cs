@@ -8,12 +8,15 @@ namespace WindowsFormsApplication1
     public partial class frmPuzzleGame : Form
     {
         int inNullSliceIndex, inmoves = 0;
+        // создаём поле для игры
         List<Bitmap> lstOriginalPictureList = new List<Bitmap>();
+        // создаём таймер игры
         System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
 
         public frmPuzzleGame()
         {
             InitializeComponent();
+            // инициализируем поле для игры и таймер
             lstOriginalPictureList.AddRange(new Bitmap[] { Properties.Resources._1, Properties.Resources._2, Properties.Resources._3, Properties.Resources._4, Properties.Resources._5, Properties.Resources._6, Properties.Resources._7, Properties.Resources._8, Properties.Resources._9, Properties.Resources._null });
             lblMovesMade.Text += inmoves;
             lblTimeElapsed.Text = "00:00:00";
@@ -23,23 +26,23 @@ namespace WindowsFormsApplication1
         {
             Shuffle();
         }
-
+        // перетасовка частей изображения
         void Shuffle()
         {
             do
             {
                 int j;
-                List<int> Indexes = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 9 });//8 is not present - since it is the last slice.
+                List<int> Indexes = new List<int>(new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 9 });
                 Random r = new Random();
                 for (int i = 0; i < 9; i++)
                 {
                     Indexes.Remove((j = Indexes[r.Next(0, Indexes.Count)]));
                     ((PictureBox)gbPuzzleBox.Controls[i]).Image = lstOriginalPictureList[j];
-                    if (j == 9) inNullSliceIndex = i;//store empty picture box index
+                    if (j == 9) inNullSliceIndex = i;
                 }
             } while (CheckWin());
         }
-
+        
         private void btnShuffle_Click(object sender, EventArgs e)
         {
             DialogResult YesOrNo = new DialogResult();     
@@ -56,7 +59,7 @@ namespace WindowsFormsApplication1
                 lblMovesMade.Text = "Moves Made : 0";
             }
         }
-
+        // выход
         private void AskPermissionBeforeQuite(object sender, FormClosingEventArgs e)
         {
             DialogResult YesOrNO = MessageBox.Show("Are You Sure To Quit ?", "Rabbit Puzzle", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -68,7 +71,7 @@ namespace WindowsFormsApplication1
         {
             AskPermissionBeforeQuite(sender, e as FormClosingEventArgs);
         }
-
+        // процесс игры
         private void SwitchPictureBox(object sender, EventArgs e)
         {
             if (lblTimeElapsed.Text == "00:00:00")
@@ -97,7 +100,7 @@ namespace WindowsFormsApplication1
                 }
             }
         }
-
+        // определение победителя
         bool CheckWin()
         {
             int i;
@@ -108,7 +111,7 @@ namespace WindowsFormsApplication1
             if (i == 8) return true;
             else return false;
         }
-
+        // обновление таймера
         private void UpdateTimeElapsed(object sender, EventArgs e)
         {
             if (timer.Elapsed.ToString() != "00:00:00")
@@ -128,7 +131,7 @@ namespace WindowsFormsApplication1
                 Shuffle();
             }
         }
-
+        // пауза
         private void PauseOrResume(object sender, EventArgs e)
         {
             if (btnPause.Text == "Pause")
